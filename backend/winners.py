@@ -70,8 +70,8 @@ class WinnerByCode(Resource):
     @winner_ns.marshal_with(winner_model)
     def get(self, code):
         # Query for the Winners by ID or return a 404 if not found
-        winner = Winners.query.get_or_404(code)
-        return winner, 200
+        winner = Winners.query.filter_by(code=code).first()
+        return winner or {"winid":0}, 200
 
     # PUT endpoint to update a specific Winners
     @winner_ns.expect(winner_model)

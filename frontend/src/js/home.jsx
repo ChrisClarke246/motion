@@ -34,7 +34,7 @@ function Home() {
 
     // console.log("Form submitted with IG:", ig, "and Guess:", guess);
 
-    fetch("/api/winner/", {
+    fetch(`/api/winner/code/${guess}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,20 +46,16 @@ function Home() {
         }
         return res.json();
       })
-      .then((winners) => {
-        // console.log(winners);
-        const CORRECT_GUESSES = winners.map(winner => winner.code);
-        if (CORRECT_GUESSES.includes(parseInt(guess))) {
-          const index = CORRECT_GUESSES.indexOf(parseInt(guess));
-          const guessid = (winners[index]).winid;
+      .then((data) => {
+        if (data.winid === 0) {
+          console.log("Wrong guess");
+          navigate("/loser/");
+        } else {
           console.log("Correct guess");
           // store user in table called winners
           localStorage.setItem("user", JSON.stringify(ig));
-          localStorage.setItem("guessid", JSON.stringify(guessid));
+          localStorage.setItem("guessid", JSON.stringify(data.winid));
           navigate("/winner/");
-        } else {
-          console.log("Wrong guess");
-          navigate("/loser/");
         }
       })
       .catch((error) => {
@@ -74,7 +70,7 @@ function Home() {
   return (
     <div className="guess-container">
       <div className="guess-card">
-        <h2>Motion Code Guesser!</h2>
+        <h2>Motion Code Guesser</h2>
         <form onSubmit={submitGuess}>
           <div className="input-group">
             <input
