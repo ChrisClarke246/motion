@@ -17,9 +17,18 @@ function Home() {
 
     // Reset error message
     setErrorMessage("");
-
-    if (guess.length !== 4) {
+    
+    const int_guess = parseInt(guess, 10)
+    if (guess.length !== 4 || isNaN(int_guess) || !Number.isInteger(int_guess)) {
       setErrorMessage("Code must be 4 digits");
+      // Reset input fields
+      setGuess("");
+      return;
+    }
+
+    
+    if (!isNaN(int_guess) && Number.isInteger(int_guess)){
+      setErrorMessage("");
       // Reset input fields
       setGuess("");
       return;
@@ -31,6 +40,7 @@ function Home() {
       setIG("");
       return;
     }
+
 
     // console.log("Form submitted with IG:", ig, "and Guess:", guess);
 
@@ -94,6 +104,13 @@ function Home() {
           <button type="submit" className="btn">
             Guess
           </button>
+          {/* <div className="buy-tickets-section"> */}
+          {/* <button className="buy-tickets-btn">
+            <a href="https://ticketlinkz.com/events/motion-the-cruise/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              Buy Tickets
+            </a>
+          </button> */}
+        {/* </div> */}
         </form>
       </div>
     </div>
