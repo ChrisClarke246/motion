@@ -14,7 +14,6 @@ function Home() {
   // Function to handle form submission
   const submitGuess = (e) => {
     e.preventDefault();
-
     // Reset error message
     setErrorMessage("");
     
@@ -26,21 +25,12 @@ function Home() {
       return;
     }
 
-    
-    if (!isNaN(int_guess) && Number.isInteger(int_guess)){
-      setErrorMessage("");
-      // Reset input fields
-      setGuess("");
-      return;
-    }
-
     if (!ig.includes("@")) {
       setErrorMessage("Enter a valid ig username (with an @)");
       // Reset input fields
       setIG("");
       return;
     }
-
 
     // console.log("Form submitted with IG:", ig, "and Guess:", guess);
 
