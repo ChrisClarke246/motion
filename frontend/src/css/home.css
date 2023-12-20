@@ -48,6 +48,7 @@ body {
   }
   
   .btn {
+    margin-top: 10px;
     background-color: #3498db; /* Blue button background color */
     color: #ffffff; /* White text color */
     padding: 10px 20px;

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../css/home.css";
 import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function Home() {
+  const captchaRef = useRef(null)
   localStorage.clear();
   const [ig, setIG] = useState("");
   const [guess, setGuess] = useState("");
@@ -16,6 +18,40 @@ function Home() {
     e.preventDefault();
     // Reset error message
     setErrorMessage("");
+
+    const token = captchaRef.current.getValue();
+
+    if (!token) {
+      setErrorMessage("Please complete the reCAPTCHA.");
+      return;
+    }
+
+    // Verify token
+    fetch(`/api/verify-captcha/${token}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ captch_response: token }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData) => {
+            throw new Error(errorData.message || "Captcha verification failed");
+          });
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Captcha verification successful, continue with your logic
+        console.log("Captcha verification successful");
+      })
+      .catch((error) => {
+        console.error("Error during captcha verification:", error);
+        setErrorMessage(error.message || "An error occurred during captcha verification");
+      });
+
+    captchaRef.current.reset();
     
     const int_guess = parseInt(guess, 10)
     if (guess.length !== 4 || isNaN(int_guess) || !Number.isInteger(int_guess)) {
@@ -91,6 +127,15 @@ function Home() {
             />
           </div>
           {errormsg && <p className="error-message">{errormsg}</p>}
+          <div className="captcha">
+          <ReCAPTCHA
+              theme="dark"
+              size = "small"
+              render="explicit"
+              sitekey={import.meta.env.VITE_REACT_APP_SITE_KEY || ""}
+              ref={captchaRef}
+              />
+            </div>
           <button type="submit" className="btn">
             Guess
           </button>
