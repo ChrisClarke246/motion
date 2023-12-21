@@ -18,6 +18,21 @@ function Home() {
     e.preventDefault();
     // Reset error message
     setErrorMessage("");
+    
+    const int_guess = parseInt(guess, 10)
+    if (guess.length !== 4 || isNaN(int_guess) || !Number.isInteger(int_guess)) {
+      setErrorMessage("Code must be 4 digits");
+      // Reset input fields
+      setGuess("");
+      return;
+    }
+
+    if (!ig.includes("@")) {
+      setErrorMessage("Enter a valid ig username (with an @)");
+      // Reset input fields
+      setIG("");
+      return;
+    }
 
     const token = captchaRef.current.getValue();
 
@@ -42,31 +57,24 @@ function Home() {
         }
         return response.json();
       })
-      .then(() => {
+      .then((data) => {
         // Captcha verification successful, continue with your logic
-        console.log("Captcha verification successful");
+        console.log(data);
+        if (data.success){
+          console.log("Captcha verification successful");
+        }
+        else{
+          console.log("Captcha verification unsuccessful");
+          setErrorMessage("Captcha verification failed")
+        }
+        
       })
       .catch((error) => {
         console.error("Error during captcha verification:", error);
-        setErrorMessage(error.message || "An error occurred during captcha verification");
+        setErrorMessage("An error occurred during captcha verification");
       });
 
     captchaRef.current.reset();
-    
-    const int_guess = parseInt(guess, 10)
-    if (guess.length !== 4 || isNaN(int_guess) || !Number.isInteger(int_guess)) {
-      setErrorMessage("Code must be 4 digits");
-      // Reset input fields
-      setGuess("");
-      return;
-    }
-
-    if (!ig.includes("@")) {
-      setErrorMessage("Enter a valid ig username (with an @)");
-      // Reset input fields
-      setIG("");
-      return;
-    }
 
     // console.log("Form submitted with IG:", ig, "and Guess:", guess);
 
