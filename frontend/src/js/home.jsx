@@ -59,7 +59,7 @@ function Home() {
       })
       .then((data) => {
         // Captcha verification successful, continue with your logic
-        console.log(data);
+        // console.log(data);
         if (data.success){
           console.log("Captcha verification successful");
         }
@@ -70,7 +70,7 @@ function Home() {
         
       })
       .catch((error) => {
-        console.error("Error during captcha verification:", error);
+        // console.error("Error during captcha verification:", error);
         setErrorMessage("An error occurred during captcha verification");
       });
 
@@ -102,13 +102,6 @@ function Home() {
           navigate("/winner/");
         }
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        // Log the actual response for debugging purposes
-        error.response.text().then((text) => {
-          console.error("Response:", text);
-        });
-      });
   };
 
   return (
