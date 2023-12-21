@@ -5,8 +5,13 @@ from backend.models import Winners
 from backend.exts import db
 from flask_jwt_extended import JWTManager
 from backend.winners import winner_ns, Winner, WinnerById, WinnerByCode
-
+from dotenv import load_dotenv
 from backend.config import DevConfig
+
+import requests
+import os
+
+load_dotenv()
 
 def create_app(config=DevConfig):
     app = Flask(__name__,
@@ -33,6 +38,18 @@ def create_app(config=DevConfig):
     @app.errorhandler(404)
     def not_found(e):
         return render_template("index.html")
+
+    @app.route('/api/verify-captcha/<string:captch_response>/', methods=['POST'])
+    def verify_captcha(captch_response):
+        reCAPTCHA_secret = os.getenv('RECAPTCHA_SECRET_KEY', 'default_secret_key')
+
+        dictToSend = {
+            'secret': reCAPTCHA_secret,
+            'response': captch_response
+        }
+
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=dictToSend)
+        return response.json()
 
     # @app.after_request
     # def after_request(response):
